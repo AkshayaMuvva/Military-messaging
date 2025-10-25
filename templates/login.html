@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Secure Messaging</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4a5fff;
+            --primary-dark: #3449db;
+            --secondary: #6b4fff;
+            --accent: #00d4ff;
+            --accent-light: #4dffff;
+            --success: #00e676;
+            --danger: #ff4757;
+            --text: #f0f4ff;
+            --text-light: #a8b2d1;
+            --bg: #0f1114;
+            --card: #1c1f2e;
+            --border: #2e3548;
+            --gradient-1: linear-gradient(135deg, #4a5fff 0%, #6b4fff 100%);
+            --gradient-2: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%);
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text: #f0f4ff;
+                --text-light: #a8b2d1;
+                --bg: #0f1114;
+                --card: #1c1f2e;
+                --border: #2e3548;
+            }
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: hsla(216, 14%, 7%, 1);
+            background: linear-gradient(0deg, hsla(216, 14%, 7%, 1) 29%, hsla(234, 70%, 24%, 1) 100%);
+            background: -moz-linear-gradient(0deg, hsla(216, 14%, 7%, 1) 29%, hsla(234, 70%, 24%, 1) 100%);
+            background: -webkit-linear-gradient(0deg, hsla(216, 14%, 7%, 1) 29%, hsla(234, 70%, 24%, 1) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+            position: relative;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.2), transparent);
+            border-radius: 50%;
+            top: -250px;
+            right: -250px;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        body::after {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(124, 58, 237, 0.15), transparent);
+            border-radius: 50%;
+            bottom: -200px;
+            left: -200px;
+            animation: float 8s ease-in-out infinite reverse;
+        }
+        
+        .login-container {
+            max-width: 500px;
+            width: 100%;
+            z-index: 10;
+        }
+        
+        .brand {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        
+        .brand-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(15px);
+            border-radius: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            margin-bottom: 1.25rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            animation: float 3s ease-in-out infinite;
+            clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .brand-title {
+            color: white;
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            letter-spacing: -0.5px;
+        }
+        
+        .brand-subtitle {
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 1rem;
+            font-weight: 500;
+        }
+        
+        .card {
+            background: var(--card);
+            border-radius: 0;
+            padding: 3rem 2.5rem;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35);
+            animation: slideUp 0.6s ease-out;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            clip-path: polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px);
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .card-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        
+        .card-header h1 {
+            color: var(--text);
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.5px;
+        }
+        
+        .card-header p {
+            color: var(--text-light);
+            font-size: 1rem;
+            font-weight: 400;
+        }
+        
+        .alert {
+            padding: 1rem 1.25rem;
+            border-radius: 0;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.9375rem;
+            font-weight: 500;
+            clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+        }
+        
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+        
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            color: var(--text);
+            font-weight: 600;
+            font-size: 0.9375rem;
+            margin-bottom: 0.625rem;
+            letter-spacing: -0.2px;
+        }
+        
+        .input-wrapper {
+            position: relative;
+        }
+        
+        .input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.25rem;
+            color: var(--text-light);
+            pointer-events: none;
+        }
+        
+        input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3.25rem;
+            border: 2px solid var(--border);
+            border-radius: 0;
+            font-family: inherit;
+            font-size: 1rem;
+            background: var(--bg);
+            color: var(--text);
+            transition: all 0.3s ease;
+            clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.15);
+            background: var(--card);
+            transform: translateY(-1px);
+        }
+        
+        input::placeholder {
+            color: var(--text-light);
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            font-size: 1.25rem;
+            padding: 0.25rem;
+        }
+        
+        .password-toggle:hover {
+            color: var(--primary);
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 1.125rem;
+            background: var(--gradient-1);
+            color: white;
+            border: none;
+            border-radius: 0;
+            font-family: inherit;
+            font-size: 1.0625rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 16px rgba(74, 95, 255, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.625rem;
+            position: relative;
+            overflow: hidden;
+            letter-spacing: -0.2px;
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.5);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .divider {
+            text-align: center;
+            margin: 2rem 0 1.5rem 0;
+            position: relative;
+        }
+        
+        .divider::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 1px;
+            background: var(--border);
+        }
+        
+        .divider span {
+            background: var(--card);
+            padding: 0 1.25rem;
+            color: var(--text-light);
+            font-size: 0.9375rem;
+            font-weight: 500;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .register-link {
+            text-align: center;
+            font-size: 1rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+        
+        .register-link a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+        
+        .register-link a:hover {
+            color: var(--accent-light);
+            text-decoration: underline;
+            transform: translateX(2px);
+        }
+        
+        .security-badge {
+            margin-top: 2.5rem;
+            padding: 1.125rem 1.25rem;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(74, 95, 255, 0.15));
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            border-radius: 0;
+            text-align: center;
+            font-size: 0.875rem;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.625rem;
+            font-weight: 500;
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+        }
+        
+        .security-badge .icon {
+            font-size: 1.5rem;
+        }
+        
+        @media (max-width: 480px) {
+            .card {
+                padding: 2.5rem 2rem;
+            }
+            
+            .brand-title {
+                font-size: 1.75rem;
+            }
+            
+            .brand-icon {
+                width: 70px;
+                height: 70px;
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="brand">
+            <div class="brand-icon">🔐</div>
+            <h1 class="brand-title">SecureMsg</h1>
+            <p class="brand-subtitle">Military-Grade Encrypted Messaging</p>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h1>Welcome Back</h1>
+                <p>Sign in to access your secure messages</p>
+            </div>
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            <span>{% if category == 'success' %}✓{% else %}⚠{% endif %}</span>
+                            <span>{{ message }}</span>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            <form method="POST" action="{{ url_for('login') }}">
+                <div class="form-group">
+                    <label for="user_id">User ID</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">👤</span>
+                        <input 
+                            type="text" 
+                            id="user_id" 
+                            name="user_id" 
+                            placeholder="Enter your user ID"
+                            autocomplete="username"
+                            required
+                            autofocus
+                        >
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">🔑</span>
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                            required
+                        >
+                        <button type="button" class="password-toggle" onclick="togglePassword()">
+                            <span id="toggle-icon">👁️</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn">
+                    <span>🔓</span>
+                    <span>Sign In Securely</span>
+                </button>
+            </form>
+            
+            <div class="divider">
+                <span>New to SecureMsg?</span>
+            </div>
+            
+            <div class="register-link">
+                <a href="{{ url_for('register') }}">Create a secure account →</a>
+            </div>
+            
+            <div class="security-badge">
+                <span class="icon">🛡️</span>
+                <span>Protected by quantum-resistant encryption</span>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const toggleIcon = document.getElementById('toggle-icon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.textContent = '🙈';
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.textContent = '👁️';
+            }
+        }
+    </script>
+</body>
+</html>

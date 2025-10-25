@@ -1,0 +1,266 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Complete - SecureMsg</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: hsla(216, 14%, 7%, 1); background: linear-gradient(0deg, hsla(216, 14%, 7%, 1) 29%, hsla(234, 70%, 24%, 1) 100%); background: -moz-linear-gradient(0deg, hsla(216, 14%, 7%, 1) 29%, hsla(234, 70%, 24%, 1) 100%); background: -webkit-linear-gradient(0deg, hsla(216, 14%, 7%, 1) 29%, hsla(234, 70%, 24%, 1) 100%); background-attachment: fixed; min-height: 100vh; padding: 2rem 1rem; position: relative; overflow-x: hidden; overflow-y: auto; }
+        body::before { content: ''; position: absolute; width: 500px; height: 500px; background: radial-gradient(circle, rgba(6, 182, 212, 0.2), transparent); border-radius: 50%; top: -250px; right: -250px; animation: float 8s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-30px, -30px); } }
+        .container { max-width: 800px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 2rem; }
+        .success-icon { width: 100px; height: 100px; background: rgba(255,255,255,0.25); backdrop-filter: blur(10px); border-radius: 0; clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px); display: inline-flex; align-items: center; justify-content: center; font-size: 4rem; margin-bottom: 1rem; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .header h1 { color: white; font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+        .header p { color: rgba(255,255,255,0.95); font-size: 1.25rem; }
+        .alert { background: linear-gradient(135deg, #dc2626, #b91c1c); border: 3px solid rgba(255,255,255,0.3); border-radius: 0; clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px); padding: 1.5rem; margin-bottom: 2rem; box-shadow: 0 10px 40px rgba(220, 38, 38, 0.3); }
+        .alert h3 { color: white; font-size: 1.25rem; font-weight: 800; margin-bottom: 0.75rem; }
+        .alert p { color: rgba(255,255,255,0.95); font-size: 1rem; line-height: 1.6; }
+        .card { background: white; border-radius: 0; clip-path: polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px); padding: 2rem; margin-bottom: 1.5rem; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+        .card-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 3px solid #f3f4f6; }
+        .card-header h2 { color: #1f2937; font-size: 1.5rem; font-weight: 700; }
+        .emoji { font-size: 2rem; }
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+        .info-box { background: #f9fafb; padding: 1.25rem; border-radius: 0; clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px); border: 2px solid #e5e7eb; }
+        .info-label { color: #6b7280; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+        .info-value { color: #1f2937; font-size: 1.125rem; font-weight: 700; }
+        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; }
+        .feature { background: rgba(16,185,129,0.1); border: 2px solid rgba(16,185,129,0.4); padding: 1rem; border-radius: 0; clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px); color: #065f46; font-weight: 600; text-align: center; }
+        .qr-container { background: white; border: 4px solid #e5e7eb; border-radius: 0; clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px); padding: 2rem; text-align: center; margin: 1rem 0; }
+        .qr-code { max-width: 300px; width: 100%; height: auto; display: block; margin: 0 auto 1rem auto; border-radius: 0; clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px); box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .qr-text { color: #374151; font-size: 1rem; font-weight: 600; margin-bottom: 1rem; }
+        .fingerprint { background: #0f172a; color: #10b981; padding: 1.5rem; border-radius: 0; clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px); font-family: 'Courier New', monospace; font-size: 1rem; word-break: break-all; line-height: 1.8; margin: 1rem 0; border: 3px solid #1e293b; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .steps { margin: 1rem 0; }
+        .step { display: flex; align-items: flex-start; gap: 1rem; padding: 1rem; background: #f9fafb; border-radius: 0; clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px); margin-bottom: 0.75rem; border: 2px solid #e5e7eb; }
+        .step-num { width: 32px; height: 32px; background: linear-gradient(135deg, #2563eb, #7c3aed); color: white; border-radius: 0; clip-path: polygon(4px 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%, 0 4px); display: flex; align-items: center; justify-content: center; font-weight: 800; flex-shrink: 0; }
+        .step-text { color: #374151; font-size: 1rem; line-height: 1.6; padding-top: 0.25rem; }
+        .tips { margin: 1rem 0; }
+        .tip { display: flex; align-items: flex-start; gap: 0.75rem; padding: 1rem; background: #fef3c7; border-left: 4px solid #f59e0b; border-radius: 0; clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px); margin-bottom: 0.75rem; }
+        .tip-icon { color: #f59e0b; font-size: 1.25rem; }
+        .tip-text { color: #78350f; font-size: 0.9375rem; line-height: 1.6; }
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 1rem 1.75rem; background: linear-gradient(135deg, #2563eb, #7c3aed); color: white; text-decoration: none; border: none; border-radius: 0; clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px); font-family: inherit; font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3); position: relative; overflow: hidden; }
+        .btn::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent); transition: left 0.5s; }
+        .btn:hover::before { left: 100%; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4); }
+        .btn-outline { background: white; color: #2563eb; border: 3px solid #2563eb; }
+        .btn-outline:hover { background: linear-gradient(135deg, #2563eb, #7c3aed); color: white; }
+        .btn-glass { background: rgba(255,255,255,0.25); backdrop-filter: blur(10px); border: 2px solid rgba(255,255,255,0.4); }
+        .btn-glass:hover { background: rgba(255,255,255,0.35); }
+        .actions { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin-top: 2rem; }
+        @media (max-width: 768px) { .header h1 { font-size: 2rem; } .card { padding: 1.5rem; } .info-grid, .features { grid-template-columns: 1fr; } .actions { flex-direction: column; } .btn { width: 100%; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="success-icon"></div>
+            <h1>Registration Successful!</h1>
+            <p>Your secure identity has been created</p>
+        </div>
+        <div class="alert">
+            <h3> CRITICAL SECURITY NOTICE</h3>
+            <p><strong>Save your QR code and fingerprint immediately!</strong> This information cannot be recovered if lost. Share your QR code only with trusted contacts for secure communication.</p>
+        </div>
+        <div class="card">
+            <div class="card-header"><span class="emoji"></span><h2>Your Identity</h2></div>
+            <div class="info-grid">
+                <div class="info-box"><div class="info-label">User ID</div><div class="info-value">{{ user_data.user_id }}</div></div>
+                <div class="info-box"><div class="info-label">Alias</div><div class="info-value">{{ user_data.alias or 'Not Set' }}</div></div>
+                <div class="info-box"><div class="info-label">Created</div><div class="info-value">{{ user_data.public_keys.created_at if user_data.public_keys.created_at else 'Just Now' }}</div></div>
+            </div>
+            <div class="card-header"><span class="emoji"></span><h2>Security Features</h2></div>
+            <div class="features">
+                <div class="feature"> Signal Protocol</div>
+                <div class="feature"> Forward Secrecy</div>
+                <div class="feature"> Digital Signatures</div>
+                <div class="feature"> Key Rotation</div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header"><span class="emoji">📱</span><h2>QR Code for Key Sharing</h2></div>
+            <div class="qr-container">
+                <img src="data:image/png;base64,{{ user_data.qr_code }}" alt="Security QR Code" class="qr-code">
+                <p class="qr-text">Share this QR code with trusted contacts to establish secure communication</p>
+                <button onclick="downloadQR()" class="btn"><span>💾</span><span>Download QR Code</span></button>
+            </div>
+            <div style="margin-top: 1.5rem; padding: 1rem; background: #f0fdf4; border: 2px solid #86efac; border-radius: 0; clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);">
+                <h4 style="color: #166534; font-size: 0.9375rem; margin-bottom: 0.75rem; font-weight: 700;">📋 QR Code Contains:</h4>
+                <ul style="list-style: none; padding: 0; margin: 0;">
+                    <li style="padding: 0.5rem 0; color: #15803d; font-size: 0.875rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <span style="color: #22c55e; font-weight: 800;">✓</span>
+                        <span><strong>User ID:</strong> {{ user_data.user_id }}</span>
+                    </li>
+                    <li style="padding: 0.5rem 0; color: #15803d; font-size: 0.875rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <span style="color: #22c55e; font-weight: 800;">✓</span>
+                        <span><strong>Public Identity Key</strong> (for encryption)</span>
+                    </li>
+                    <li style="padding: 0.5rem 0; color: #15803d; font-size: 0.875rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <span style="color: #22c55e; font-weight: 800;">✓</span>
+                        <span><strong>Public Prekey</strong> (for session establishment)</span>
+                    </li>
+                    <li style="padding: 0.5rem 0; color: #15803d; font-size: 0.875rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <span style="color: #22c55e; font-weight: 800;">✓</span>
+                        <span><strong>Signed Prekey</strong> (for authentication)</span>
+                    </li>
+                    <li style="padding: 0.5rem 0; color: #15803d; font-size: 0.875rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <span style="color: #22c55e; font-weight: 800;">✓</span>
+                        <span><strong>Key Fingerprint</strong> (for verification)</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header"><span class="emoji">🔑</span><h2>Verification Fingerprint</h2></div>
+            <div class="fingerprint" id="fingerprint">{{ user_data.fingerprint }}</div>
+            <button onclick="copyFingerprint()" class="btn btn-outline"><span>📋</span><span>Copy Fingerprint</span></button>
+            
+            <div style="margin-top: 1.5rem; padding: 1.25rem; background: #eff6ff; border: 2px solid #93c5fd; border-radius: 0; clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);">
+                <h4 style="color: #1e40af; font-size: 1rem; margin-bottom: 1rem; font-weight: 700;">🔍 How to Verify Fingerprints</h4>
+                <div style="background: white; padding: 1rem; border-radius: 0; clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px); margin-bottom: 1rem;">
+                    <p style="color: #1f2937; font-size: 0.9375rem; line-height: 1.7; margin-bottom: 0.75rem;">
+                        <strong style="color: #1e40af;">Step 1: Exchange Fingerprints</strong><br>
+                        Share your fingerprint with your contact through a secure channel (in person, phone call, or encrypted message).
+                    </p>
+                    <p style="color: #1f2937; font-size: 0.9375rem; line-height: 1.7; margin-bottom: 0.75rem;">
+                        <strong style="color: #1e40af;">Step 2: Compare Character by Character</strong><br>
+                        Both parties should compare the fingerprints character by character to ensure they match exactly.
+                    </p>
+                    <p style="color: #1f2937; font-size: 0.9375rem; line-height: 1.7;">
+                        <strong style="color: #1e40af;">Step 3: Confirm Match</strong><br>
+                        If fingerprints match perfectly, you can trust that the encryption keys are authentic and communication is secure.
+                    </p>
+                </div>
+                <div style="background: #fef3c7; padding: 1rem; border-left: 4px solid #f59e0b; border-radius: 0; clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);">
+                    <p style="color: #78350f; font-size: 0.875rem; line-height: 1.6;">
+                        <strong>⚠️ Security Tip:</strong> Always verify fingerprints through a separate, trusted communication channel (not through this app). Best practice is to verify in person or via voice call.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header"><span class="emoji"></span><h2>Next Steps</h2></div>
+            <div class="steps">
+                <div class="step"><div class="step-num">1</div><div class="step-text">Save your QR code image to a secure location</div></div>
+                <div class="step"><div class="step-num">2</div><div class="step-text">Share your fingerprint with trusted contacts</div></div>
+                <div class="step"><div class="step-num">3</div><div class="step-text">Verify contact fingerprints before messaging</div></div>
+                <div class="step"><div class="step-num">4</div><div class="step-text">Start sending encrypted messages</div></div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header"><span class="emoji">🔒</span><h2>Security Best Practices</h2></div>
+            <div class="tips">
+                <div class="tip"><div class="tip-icon">🔐</div><div class="tip-text">Never share your private keys with anyone</div></div>
+                <div class="tip"><div class="tip-icon">👥</div><div class="tip-text">Always verify fingerprints in person when possible</div></div>
+                <div class="tip"><div class="tip-icon">🔄</div><div class="tip-text">Rotate your encryption keys regularly</div></div>
+                <div class="tip"><div class="tip-icon">📡</div><div class="tip-text">Use only trusted and secure networks</div></div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header"><span class="emoji">🔍</span><h2>Verify Contact's Fingerprint</h2></div>
+            <p style="color: #6b7280; font-size: 0.9375rem; margin-bottom: 1.25rem; line-height: 1.6;">
+                Before sending sensitive messages to a contact, verify their identity by checking their fingerprint.
+            </p>
+            <div style="display: grid; gap: 1rem;">
+                <div>
+                    <label style="display: block; color: #374151; font-weight: 600; font-size: 0.875rem; margin-bottom: 0.5rem;">Contact's User ID</label>
+                    <input type="text" id="verify-userid" placeholder="Enter contact's User ID" style="width: 100%; padding: 0.875rem; border: 2px solid #e5e7eb; border-radius: 0; clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px); font-size: 0.9375rem; font-family: inherit;">
+                </div>
+                <button onclick="verifyContact()" class="btn" style="width: 100%;">
+                    <span>🔍</span>
+                    <span>Look Up Contact's Fingerprint</span>
+                </button>
+                <div id="verify-result" style="display: none; margin-top: 0.5rem;"></div>
+            </div>
+        </div>
+        <div class="actions">
+            <a href="/send_message" class="btn"><span></span><span>Send Your First Message</span></a>
+            <a href="/inbox" class="btn btn-glass"><span></span><span>View Inbox</span></a>
+            <a href="/status" class="btn btn-glass"><span></span><span>System Status</span></a>
+            <a href="/" class="btn btn-glass"><span></span><span>Home</span></a>
+        </div>
+    </div>
+    <script>
+        function downloadQR() {
+            const img = document.querySelector('.qr-code');
+            const link = document.createElement('a');
+            link.download = 'secure-keys-{{ user_data.user_id }}.png';
+            link.href = img.src;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            const btn = event.target.closest('button');
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = '<span></span><span>Downloaded!</span>';
+            btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+            setTimeout(() => { btn.innerHTML = originalHTML; btn.style.background = ''; }, 2000);
+        }
+        function copyFingerprint() {
+            const fingerprintText = document.getElementById('fingerprint').textContent.trim();
+            navigator.clipboard.writeText(fingerprintText).then(() => {
+                const btn = event.target.closest('button');
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = '<span></span><span>Copied!</span>';
+                btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+                btn.style.color = 'white';
+                setTimeout(() => { btn.innerHTML = originalHTML; btn.style.background = ''; btn.style.color = ''; }, 2000);
+            }).catch(err => { alert('Failed to copy. Please copy manually.'); });
+        }
+        
+        async function verifyContact() {
+            const userId = document.getElementById('verify-userid').value.trim();
+            const resultDiv = document.getElementById('verify-result');
+            
+            if (!userId) {
+                resultDiv.innerHTML = '<div style="padding: 1rem; background: #fee2e2; border: 2px solid #fca5a5; border-radius: 0; clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px); color: #991b1b;"><strong>⚠️ Error:</strong> Please enter a User ID</div>';
+                resultDiv.style.display = 'block';
+                return;
+            }
+            
+            resultDiv.innerHTML = '<div style="padding: 1rem; background: #dbeafe; border: 2px solid #93c5fd; border-radius: 0; clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px); color: #1e40af;"><strong>🔄 Searching...</strong> Looking up contact fingerprint</div>';
+            resultDiv.style.display = 'block';
+            
+            try {
+                const response = await fetch('/api/get_user_fingerprint', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_id: userId })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    resultDiv.innerHTML = `
+                        <div style="padding: 1.25rem; background: #f0fdf4; border: 2px solid #86efac; border-radius: 0; clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);">
+                            <h4 style="color: #166534; font-size: 1rem; margin-bottom: 1rem; font-weight: 700;">✅ Contact Found</h4>
+                            <div style="margin-bottom: 1rem;">
+                                <div style="color: #6b7280; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.25rem;">User ID</div>
+                                <div style="color: #1f2937; font-size: 1rem; font-weight: 600;">${data.user_id}</div>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <div style="color: #6b7280; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.25rem;">Alias</div>
+                                <div style="color: #1f2937; font-size: 1rem; font-weight: 600;">${data.alias || 'Not Set'}</div>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <div style="color: #6b7280; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem;">Fingerprint</div>
+                                <div style="background: #0f172a; color: #10b981; padding: 1rem; border-radius: 0.5rem; font-family: 'Courier New', monospace; font-size: 0.875rem; word-break: break-all; line-height: 1.8; border: 2px solid #1e293b;">${data.fingerprint}</div>
+                            </div>
+                            <div style="background: #fef3c7; padding: 1rem; border-left: 4px solid #f59e0b; border-radius: 0.5rem;">
+                                <p style="color: #78350f; font-size: 0.875rem; line-height: 1.6; margin: 0;">
+                                    <strong>📞 Next Step:</strong> Contact this person through a secure channel (phone, in-person) and verify this fingerprint matches what they see on their device.
+                                </p>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<div style="padding: 1rem; background: #fee2e2; border: 2px solid #fca5a5; border-radius: 0.5rem; color: #991b1b;"><strong>❌ Not Found:</strong> ${data.message || 'User not found in the system'}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div style="padding: 1rem; background: #fee2e2; border: 2px solid #fca5a5; border-radius: 0.5rem; color: #991b1b;"><strong>⚠️ Error:</strong> Failed to verify contact. Please try again.</div>`;
+            }
+        }
+    </script>
+</body>
+</html>

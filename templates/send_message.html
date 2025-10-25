@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Secure Message - Military Secure Messaging</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4a5fff;
+            --primary-dark: #3449db;
+            --secondary-color: #6b4fff;
+            --accent-color: #00d4ff;
+            --accent-light: #4dffff;
+            --danger-color: #ff4757;
+            --warning-color: #ffa502;
+            --success-color: #00e676;
+            --text-color: #f0f4ff;
+            --text-light: #a8b2d1;
+            --background-color: #0f1114;
+            --card-bg: #1c1f2e;
+            --border-color: #2e3548;
+            --gradient-1: linear-gradient(135deg, #4a5fff 0%, #6b4fff 100%);
+            --gradient-2: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%);
+            --gradient-3: linear-gradient(135deg, #ff4757 0%, #ff1744 100%);
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #f0f4ff;
+                --text-light: #a8b2d1;
+                --background-color: #0f1114;
+                --card-bg: #1c1f2e;
+                --border-color: #2e3548;
+            }
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        /* Performance optimizations */
+        *,
+        *::before,
+        *::after {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: hsla(216, 14%, 7%, 1);
+            background: linear-gradient(0deg, hsla(216, 14%, 7%, 1) 29%, hsla(234, 70%, 24%, 1) 100%);
+            background: -moz-linear-gradient(0deg, hsla(216, 14%, 7%, 1) 29%, hsla(234, 70%, 24%, 1) 100%);
+            background: -webkit-linear-gradient(0deg, hsla(216, 14%, 7%, 1) 29%, hsla(234, 70%, 24%, 1) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+            position: relative;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.15), transparent);
+            border-radius: 50%;
+            bottom: -250px;
+            right: -250px;
+            animation: float 8s ease-in-out infinite;
+            will-change: transform;
+            pointer-events: none;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+            50% { transform: translate3d(-15px, -15px, 0) scale(1.05); }
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 800px;
+            will-change: auto;
+        }
+        
+        .logo-container {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .logo {
+            font-size: 3.5rem;
+            margin-bottom: 0.5rem;
+            animation: logoFloat 4s ease-in-out infinite;
+            will-change: transform;
+        }
+        
+        @keyframes logoFloat {
+            0%, 100% { transform: translate3d(0, 0, 0); }
+            50% { transform: translate3d(0, -8px, 0); }
+        }
+        
+        .logo-text {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.25rem;
+        }
+        
+        .logo-subtitle {
+            font-size: 0.9375rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .card {
+            background: var(--card-bg);
+            border-radius: 0;
+            clip-path: polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            transform: translateZ(0);
+            backface-visibility: hidden;
+        }
+        
+        .card-header {
+            background: var(--gradient-2);
+            padding: 2rem;
+            text-align: center;
+            color: white;
+        }
+        
+        .card-header h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .card-header p {
+            font-size: 0.9375rem;
+            opacity: 0.95;
+        }
+        
+        .card-body {
+            padding: 2rem;
+        }
+        
+        .flash-messages {
+            margin-bottom: 1.5rem;
+        }
+        
+        .flash-message {
+            padding: 1rem 1.25rem;
+            margin-bottom: 1rem;
+            border-radius: 0;
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .flash-success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+        
+        .flash-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        .threat-panel {
+            background: linear-gradient(135deg, rgba(255, 71, 87, 0.10), rgba(255, 71, 87, 0.06));
+            border: 1px solid var(--danger-color);
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        .threat-item { display: flex; align-items: center; gap: .5rem; margin: .25rem 0; }
+        .threat-chip { background: var(--danger-color); color: #fff; padding: .15rem .5rem; font-size: .7rem; font-weight: 700; }
+        
+        .form-section {
+            margin-bottom: 2rem;
+            contain: layout style;
+        }
+        
+        .form-section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+        
+        .section-icon {
+            font-size: 1.5rem;
+        }
+        
+        .form-section-header h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 0.9375rem;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-label-optional {
+            font-weight: 400;
+            color: var(--text-light);
+            font-size: 0.875rem;
+        }
+        
+        .input-wrapper {
+            position: relative;
+        }
+        
+        .input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.25rem;
+            color: var(--text-light);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 1rem;
+            padding-left: 3rem;
+            border: 2px solid var(--border-color);
+            border-radius: 0;
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+            font-size: 1rem;
+            font-family: inherit;
+            background: var(--card-bg);
+            color: var(--text-color);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.1);
+        }
+        
+        textarea.form-control {
+            resize: vertical;
+            min-height: 200px;
+            padding-left: 1rem;
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            transform: translateZ(0);
+            backface-visibility: hidden;
+        }
+        
+        .char-count {
+            text-align: right;
+            font-size: 0.875rem;
+            color: var(--text-light);
+            margin-top: 0.5rem;
+        }
+        
+        .ttl-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1rem;
+            margin-top: 0.75rem;
+        }
+        
+        .ttl-option {
+            position: relative;
+        }
+        
+        .ttl-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+        }
+        
+        .ttl-label {
+            display: block;
+            padding: 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 0;
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+            background: var(--card-bg);
+            will-change: transform;
+        }
+        
+        .ttl-label:hover {
+            border-color: var(--primary-color);
+            background: rgba(99, 102, 241, 0.05);
+        }
+        
+        .ttl-option input[type="radio"]:checked + .ttl-label {
+            background: var(--gradient-1);
+            border-color: var(--primary-color);
+            color: white;
+            transform: scale(1.03);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+        
+        .ttl-time {
+            display: block;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+        
+        .ttl-desc {
+            font-size: 0.75rem;
+            opacity: 0.9;
+        }
+        
+        .security-features {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.08), rgba(124, 58, 237, 0.08));
+            border: 2px solid var(--primary-color);
+            border-radius: 0;
+            clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .security-features h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: var(--card-bg);
+            border-radius: 0;
+            clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+        }
+        
+        .feature-icon {
+            font-size: 1.5rem;
+        }
+        
+        .feature-text {
+            font-size: 0.875rem;
+            color: var(--text-color);
+        }
+        
+        .feature-label {
+            font-weight: 600;
+            display: block;
+        }
+        
+        .feature-value {
+            color: var(--text-light);
+            font-size: 0.8125rem;
+        }
+        
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 0;
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            justify-content: center;
+            text-decoration: none;
+        }
+        
+        .btn-primary {
+            background: var(--gradient-1);
+            color: white;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            will-change: transform;
+        }
+        
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s ease;
+            will-change: left;
+        }
+        
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+        
+        .btn-secondary {
+            background: var(--background-color);
+            color: var(--text-color);
+            border: 2px solid var(--border-color);
+        }
+        
+        .btn-secondary:hover {
+            border-color: var(--primary-color);
+            background: var(--card-bg);
+        }
+        
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .help-text {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            margin-top: 0.5rem;
+            line-height: 1.5;
+        }
+        
+        .warning-box {
+            background: #fef3c7;
+            border: 2px solid #f59e0b;
+            border-radius: 0;
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            gap: 0.75rem;
+        }
+        
+        .warning-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+        
+        .warning-content {
+            flex: 1;
+        }
+        
+        .warning-title {
+            font-weight: 600;
+            color: #92400e;
+            margin-bottom: 0.25rem;
+        }
+        
+        .warning-text {
+            font-size: 0.875rem;
+            color: #92400e;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem 0.5rem;
+            }
+            
+            .card-header {
+                padding: 1.5rem;
+            }
+            
+            .card-body {
+                padding: 1.5rem;
+            }
+            
+            .logo {
+                font-size: 2.5rem;
+            }
+            
+            .logo-text {
+                font-size: 1.5rem;
+            }
+            
+            .ttl-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .button-group {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .ttl-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Fingerprint Verification Styles */
+        .fingerprint-container {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(0, 212, 255, 0.05);
+            border: 2px solid var(--accent-color);
+            border-radius: 0;
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+            display: none;
+        }
+        
+        .fingerprint-container.show {
+            display: block;
+            animation: slideIn 0.25s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translate3d(0, -10px, 0);
+            }
+            to {
+                opacity: 1;
+                transform: translate3d(0, 0, 0);
+            }
+        }
+        
+        .fingerprint-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+            color: var(--accent-color);
+            font-weight: 600;
+            font-size: 0.9375rem;
+        }
+        
+        .fingerprint-value {
+            background: #0f172a;
+            color: #00e676;
+            padding: 0.875rem;
+            border-radius: 0;
+            clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+            font-family: 'Courier New', monospace;
+            font-size: 0.8125rem;
+            word-break: break-all;
+            line-height: 1.6;
+            border: 2px solid #1e293b;
+        }
+        
+        .fingerprint-info {
+            margin-top: 0.75rem;
+            padding: 0.75rem;
+            background: rgba(255, 165, 2, 0.1);
+            border-left: 3px solid var(--warning-color);
+            border-radius: 0;
+            clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
+            font-size: 0.8125rem;
+            color: var(--text-light);
+            line-height: 1.5;
+        }
+        
+        .verify-button {
+            margin-top: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: transparent;
+            border: 2px solid var(--accent-color);
+            color: var(--accent-color);
+            border-radius: 0;
+            clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .verify-button:hover {
+            background: var(--accent-color);
+            color: var(--card-bg);
+        }
+        
+        .fingerprint-loading {
+            text-align: center;
+            padding: 1rem;
+            color: var(--text-light);
+        }
+        
+        .fingerprint-error {
+            padding: 0.875rem;
+            background: rgba(255, 71, 87, 0.1);
+            border: 2px solid var(--danger-color);
+            border-radius: 0;
+            clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+            color: var(--danger-color);
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo-container">
+            <div class="logo">📨</div>
+            <div class="logo-text">Secure Message</div>
+            <div class="logo-subtitle">End-to-end encrypted communication</div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h1>Compose New Message</h1>
+                <p>Your message will be encrypted and self-destruct after viewing</p>
+            </div>
+            
+            <div class="card-body">
+                <!-- Flash Messages -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <div class="flash-messages">
+                            {% for category, message in messages %}
+                                <div class="flash-message flash-{{ category }}">
+                                    <span>{% if category == 'success' %}✓{% else %}⚠{% endif %}</span>
+                                    <span>{{ message }}</span>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+                
+                {% if sender_threats and sender_threats|length > 0 %}
+                <div class="threat-panel">
+                    <div style="font-weight:700; margin-bottom:.5rem;">🚨 Recent Sender-Side Security Alerts</div>
+                    {% for t in sender_threats %}
+                    <div class="threat-item">
+                        <span class="threat-chip">{{ t.severity_label }}</span>
+                        <span>{{ t.title }} — {{ t.detected_ago }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                
+                <form method="POST" action="/send_message" id="messageForm">
+                    <!-- Recipient Section -->
+                    <div class="form-section">
+                        <div class="form-section-header">
+                            <span class="section-icon">👤</span>
+                            <h2>Recipient</h2>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="recipient_id">
+                                Recipient User ID
+                            </label>
+                            <div class="input-wrapper">
+                                <span class="input-icon">@</span>
+                                <input 
+                                    type="text" 
+                                    id="recipient_id" 
+                                    name="recipient_id" 
+                                    class="form-control"
+                                    placeholder="Enter recipient's user ID"
+                                    required
+                                    autofocus
+                                    autocomplete="off">
+                            </div>
+                            <p class="help-text">Enter the exact User ID of the recipient. Messages can only be sent to registered users.</p>
+                            
+                            <!-- Fingerprint Verification Section -->
+                            <div id="fingerprint-container" class="fingerprint-container">
+                                <div class="fingerprint-header">
+                                    <span>🔐</span>
+                                    <span>Recipient's Security Fingerprint</span>
+                                </div>
+                                <div id="fingerprint-content"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Message Section -->
+                    <div class="form-section">
+                        <div class="form-section-header">
+                            <span class="section-icon">✍️</span>
+                            <h2>Message Content</h2>
+                        </div>
+                        
+                        <div class="warning-box">
+                            <div class="warning-icon">⚠️</div>
+                            <div class="warning-content">
+                                <div class="warning-title">Security Notice</div>
+                                <div class="warning-text">
+                                    Messages are end-to-end encrypted and will self-destruct after the recipient views them. Do not include sensitive information that you may need later.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="message">
+                                Your Message
+                            </label>
+                            <textarea 
+                                id="message" 
+                                name="message" 
+                                class="form-control"
+                                placeholder="Type your secure message here..."
+                                required
+                                maxlength="5000"></textarea>
+                            <div class="char-count">
+                                <span id="charCount">0</span> / 5000 characters
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- TTL Section -->
+                    <div class="form-section">
+                        <div class="form-section-header">
+                            <span class="section-icon">⏱️</span>
+                            <h2>Message Lifetime</h2>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">
+                                Time to Live (TTL)
+                            </label>
+                            <p class="help-text" style="margin-bottom: 1rem;">
+                                How long the message will remain available before automatic deletion
+                            </p>
+                            
+                            <div class="ttl-grid">
+                                <div class="ttl-option">
+                                    <input type="radio" id="ttl_300" name="ttl" value="300">
+                                    <label class="ttl-label" for="ttl_300">
+                                        <span class="ttl-time">5m</span>
+                                        <span class="ttl-desc">Minutes</span>
+                                    </label>
+                                </div>
+                                
+                                <div class="ttl-option">
+                                    <input type="radio" id="ttl_900" name="ttl" value="900">
+                                    <label class="ttl-label" for="ttl_900">
+                                        <span class="ttl-time">15m</span>
+                                        <span class="ttl-desc">Minutes</span>
+                                    </label>
+                                </div>
+                                
+                                <div class="ttl-option">
+                                    <input type="radio" id="ttl_1800" name="ttl" value="1800">
+                                    <label class="ttl-label" for="ttl_1800">
+                                        <span class="ttl-time">30m</span>
+                                        <span class="ttl-desc">Minutes</span>
+                                    </label>
+                                </div>
+                                
+                                <div class="ttl-option">
+                                    <input type="radio" id="ttl_3600" name="ttl" value="3600" checked>
+                                    <label class="ttl-label" for="ttl_3600">
+                                        <span class="ttl-time">1h</span>
+                                        <span class="ttl-desc">Hour</span>
+                                    </label>
+                                </div>
+                                
+                                <div class="ttl-option">
+                                    <input type="radio" id="ttl_21600" name="ttl" value="21600">
+                                    <label class="ttl-label" for="ttl_21600">
+                                        <span class="ttl-time">6h</span>
+                                        <span class="ttl-desc">Hours</span>
+                                    </label>
+                                </div>
+                                
+                                <div class="ttl-option">
+                                    <input type="radio" id="ttl_86400" name="ttl" value="86400">
+                                    <label class="ttl-label" for="ttl_86400">
+                                        <span class="ttl-time">24h</span>
+                                        <span class="ttl-desc">Hours</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Security Features -->
+                    <div class="security-features">
+                        <h3>
+                            <span>🔒</span>
+                            <span>Active Security Features</span>
+                        </h3>
+                        <div class="feature-grid">
+                            <div class="feature-item">
+                                <span class="feature-icon">🔐</span>
+                                <div class="feature-text">
+                                    <span class="feature-label">Encryption</span>
+                                    <span class="feature-value">Quantum-Resistant</span>
+                                </div>
+                            </div>
+                            
+                            <div class="feature-item">
+                                <span class="feature-icon">🧅</span>
+                                <div class="feature-text">
+                                    <span class="feature-label">Routing</span>
+                                    <span class="feature-value">Tor Network</span>
+                                </div>
+                            </div>
+                            
+                            <div class="feature-item">
+                                <span class="feature-icon">💾</span>
+                                <div class="feature-text">
+                                    <span class="feature-label">Memory</span>
+                                    <span class="feature-value">Secure Storage</span>
+                                </div>
+                            </div>
+                            
+                            <div class="feature-item">
+                                <span class="feature-icon">🗑️</span>
+                                <div class="feature-text">
+                                    <span class="feature-label">Auto-Delete</span>
+                                    <span class="feature-value">After Reading</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Buttons -->
+                    <div class="button-group">
+                        <button type="submit" class="btn btn-primary" id="sendBtn">
+                            <span>📤</span>
+                            <span>Send Secure Message</span>
+                        </button>
+                        
+                        <a href="/" class="btn btn-secondary">
+                            <span>✕</span>
+                            <span>Cancel</span>
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Character counter
+        const messageTextarea = document.getElementById('message');
+        const charCountSpan = document.getElementById('charCount');
+        
+        messageTextarea.addEventListener('input', function() {
+            const count = this.value.length;
+            charCountSpan.textContent = count;
+            
+            if (count > 4500) {
+                charCountSpan.style.color = 'var(--danger-color)';
+            } else if (count > 4000) {
+                charCountSpan.style.color = 'var(--warning-color)';
+            } else {
+                charCountSpan.style.color = 'var(--text-light)';
+            }
+        });
+        
+        // Form validation
+        const messageForm = document.getElementById('messageForm');
+        const sendBtn = document.getElementById('sendBtn');
+        const recipientInput = document.getElementById('recipient_id');
+        const fingerprintContainer = document.getElementById('fingerprint-container');
+        const fingerprintContent = document.getElementById('fingerprint-content');
+        
+        let debounceTimer;
+        
+        // Fetch and display recipient's fingerprint when user ID is entered
+        recipientInput.addEventListener('input', function() {
+            clearTimeout(debounceTimer);
+            const userId = this.value.trim();
+            
+            if (!userId) {
+                fingerprintContainer.classList.remove('show');
+                return;
+            }
+            
+            // Debounce the API call - faster response
+            debounceTimer = setTimeout(() => {
+                fetchRecipientFingerprint(userId);
+            }, 300);
+        });
+        
+        async function fetchRecipientFingerprint(userId) {
+            fingerprintContainer.classList.add('show');
+            fingerprintContent.innerHTML = '<div class="fingerprint-loading">🔄 Loading fingerprint...</div>';
+            
+            try {
+                const response = await fetch('/api/get_user_fingerprint', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ user_id: userId })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    fingerprintContent.innerHTML = `
+                        <div class="fingerprint-value">${data.fingerprint}</div>
+                        <div class="fingerprint-info">
+                            <strong>⚠️ Security Reminder:</strong> Verify this fingerprint matches what the recipient shared with you through a trusted channel (in person, phone call, or another secure method) before sending sensitive information.
+                        </div>
+                    `;
+                } else {
+                    fingerprintContent.innerHTML = `
+                        <div class="fingerprint-error">
+                            <strong>⚠️ User not found:</strong> ${data.error || 'Unable to retrieve fingerprint. Please verify the User ID is correct.'}
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                fingerprintContent.innerHTML = `
+                    <div class="fingerprint-error">
+                        <strong>❌ Error:</strong> Unable to fetch fingerprint. Please check your connection and try again.
+                    </div>
+                `;
+            }
+        }
+        
+        messageForm.addEventListener('submit', function(e) {
+            const recipientId = document.getElementById('recipient_id').value.trim();
+            const message = messageTextarea.value.trim();
+            
+            if (!recipientId || !message) {
+                e.preventDefault();
+                alert('Please fill in all required fields');
+                return false;
+            }
+            
+            // Disable button to prevent double submission
+            sendBtn.disabled = true;
+            sendBtn.innerHTML = '<span>⏳</span><span>Encrypting & Sending...</span>';
+            sendBtn.style.opacity = '0.7';
+        });
+        
+        // TTL selection animation
+        const ttlOptions = document.querySelectorAll('.ttl-option input[type="radio"]');
+        ttlOptions.forEach(option => {
+            option.addEventListener('change', function() {
+                const label = this.nextElementSibling;
+                label.style.animation = 'none';
+                setTimeout(() => {
+                    label.style.animation = 'float 3s ease-in-out infinite';
+                }, 10);
+            });
+        });
+    </script>
+</body>
+</html>

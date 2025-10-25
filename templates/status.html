@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Status - Military Secure Messaging</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4a5fff;
+            --primary-dark: #3449db;
+            --secondary-color: #6b4fff;
+            --accent-color: #00d4ff;
+            --accent-light: #4dffff;
+            --danger-color: #ff4757;
+            --warning-color: #ffa502;
+            --success-color: #00e676;
+            --text-color: #f0f4ff;
+            --text-light: #a8b2d1;
+            --background-color: #0f1114;
+            --card-bg: #1c1f2e;
+            --border-color: #2e3548;
+            --gradient-1: linear-gradient(135deg, #4a5fff 0%, #6b4fff 100%);
+            --gradient-2: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%);
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #f0f4ff;
+                --text-light: #a8b2d1;
+                --background-color: #0f1114;
+                --card-bg: #1c1f2e;
+                --border-color: #2e3548;
+            }
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: hsla(216, 14%, 7%, 1);
+            background: linear-gradient(0deg, hsla(216, 14%, 7%, 1) 29%, hsla(234, 70%, 24%, 1) 100%);
+            background: -moz-linear-gradient(0deg, hsla(216, 14%, 7%, 1) 29%, hsla(234, 70%, 24%, 1) 100%);
+            background: -webkit-linear-gradient(0deg, hsla(216, 14%, 7%, 1) 29%, hsla(234, 70%, 24%, 1) 100%);
+            background-attachment: fixed;
+            color: var(--text-color);
+            min-height: 100vh;
+            padding: 0;
+        }
+        
+        .navbar {
+            background: rgba(255, 255, 255, 0.8);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(20px) saturate(180%);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            .navbar {
+                background: rgba(30, 41, 59, 0.8);
+            }
+        }
+        
+        .navbar-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 700;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .refresh-btn {
+            padding: 0.5rem 1rem;
+            background: var(--background-color);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            border-radius: 0;
+            clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .refresh-btn:hover {
+            background: var(--gradient-2);
+            color: white;
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .header h1 {
+            font-size: clamp(1.75rem, 4vw, 2.5rem);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .header-subtitle {
+            color: var(--text-light);
+            font-size: 0.9375rem;
+        }
+        
+        .flash-messages {
+            margin-bottom: 1.5rem;
+        }
+        
+        .flash-message {
+            padding: 1rem 1.25rem;
+            margin-bottom: 1rem;
+            border-radius: 0;
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .flash-success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+        
+        .flash-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+        
+        .overview-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .overview-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0;
+            clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px);
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .overview-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+        
+        .overview-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 0;
+            clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            flex-shrink: 0;
+        }
+        
+        .icon-success {
+            background: linear-gradient(135deg, var(--success-color), #059669);
+            color: white;
+        }
+        
+        .icon-warning {
+            background: linear-gradient(135deg, var(--warning-color), #f97316);
+            color: white;
+        }
+        
+        .icon-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+        }
+        
+        .icon-accent {
+            background: linear-gradient(135deg, var(--accent-color), #0891b2);
+            color: white;
+        }
+        
+        .overview-content h3 {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+        
+        .overview-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-color);
+        }
+        
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .status-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0;
+            clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px);
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .status-card:hover {
+            box-shadow: 0 8px 16px rgba(99, 102, 241, 0.1);
+        }
+        
+        .status-card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .status-card-icon {
+            font-size: 1.5rem;
+        }
+        
+        .status-card h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .status-item:last-child {
+            border-bottom: none;
+        }
+        
+        .status-label {
+            color: var(--text-light);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .status-value {
+            font-weight: 600;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: pulse-dot 2s infinite;
+        }
+        
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .status-active {
+            color: var(--success-color);
+        }
+        
+        .status-active .status-dot {
+            background: var(--success-color);
+        }
+        
+        .status-warning {
+            color: var(--warning-color);
+        }
+        
+        .status-warning .status-dot {
+            background: var(--warning-color);
+        }
+        
+        .status-danger {
+            color: var(--danger-color);
+        }
+        
+        .status-danger .status-dot {
+            background: var(--danger-color);
+        }
+        
+        .threat-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0;
+            clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .threat-low {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .threat-medium {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .threat-high {
+            background: #fee2e2;
+            color: #991b1b;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        
+        .emergency-section {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.1));
+            border: 2px solid var(--danger-color);
+            border-radius: 0;
+            clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .emergency-section h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--danger-color);
+        }
+        
+        .emergency-section p {
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+        }
+        
+        .emergency-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 0.875rem 1.5rem;
+            border: none;
+            border-radius: 0;
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+            font-size: 0.9375rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger-color), #dc2626);
+            color: white;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+        
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
+        }
+        
+        .btn-secondary {
+            background: var(--card-bg);
+            color: var(--text-color);
+            border: 2px solid var(--border-color);
+        }
+        
+        .btn-secondary:hover {
+            border-color: var(--primary-color);
+            background: var(--background-color);
+        }
+        
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .navbar-content {
+                padding: 0 1rem;
+            }
+            
+            .container {
+                padding: 1.5rem 1rem;
+            }
+            
+            .overview-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .status-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .emergency-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="logo">🛡️ SecureMsg</div>
+            <button class="refresh-btn" onclick="location.reload()">
+                <span>🔄</span>
+                <span>Refresh</span>
+            </button>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div class="header">
+            <h1>System Status Dashboard</h1>
+            <p class="header-subtitle">Real-time security monitoring and system health</p>
+        </div>
+        
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash-message flash-{{ category }}">
+                            <span>{% if category == 'success' %}✓{% else %}⚠{% endif %}</span>
+                            <span>{{ message }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+        <!-- Overview Cards -->
+        <div class="overview-cards">
+            <div class="overview-card">
+                <div class="overview-icon icon-success">🔒</div>
+                <div class="overview-content">
+                    <h3>Security Level</h3>
+                    <div class="overview-value">Maximum</div>
+                </div>
+            </div>
+            
+            <div class="overview-card">
+                <div class="overview-icon icon-primary">💾</div>
+                <div class="overview-content">
+                    <h3>Active Messages</h3>
+                    <div class="overview-value">{{ status.memory_usage }}</div>
+                </div>
+            </div>
+            
+            <div class="overview-card">
+                <div class="overview-icon icon-warning">⚠️</div>
+                <div class="overview-content">
+                    <h3>Blocked Threats</h3>
+                    <div class="overview-value">{{ status.ids_status.blocked_ips }}</div>
+                </div>
+            </div>
+            
+            <div class="overview-card">
+                <div class="overview-icon icon-accent">📡</div>
+                <div class="overview-content">
+                    <h3>Active Sessions</h3>
+                    <div class="overview-value">{{ status.ids_status.active_sessions }}</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Detailed Status Grid -->
+        <div class="status-grid">
+            <!-- Tor Status -->
+            <div class="status-card">
+                <div class="status-card-header">
+                    <span class="status-card-icon">🧅</span>
+                    <h3>Tor Network</h3>
+                </div>
+                {% if status.tor_status.active %}
+                <div class="status-item">
+                    <span class="status-label">Connection Status</span>
+                    <span class="status-value status-active">
+                        <span class="status-dot"></span>
+                        <span>Connected</span>
+                    </span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Hidden Service</span>
+                    <span class="status-value status-active">
+                        <span class="status-dot"></span>
+                        <span>Active</span>
+                    </span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Exit IP</span>
+                    <span class="status-value">{{ status.tor_status.current_ip or 'Unknown' }}</span>
+                </div>
+                {% else %}
+                <div class="status-item">
+                    <span class="status-label">Connection Status</span>
+                    <span class="status-value status-danger">
+                        <span class="status-dot"></span>
+                        <span>Disconnected</span>
+                    </span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Mode</span>
+                    <span class="status-value">Fallback</span>
+                </div>
+                {% endif %}
+            </div>
+            
+            <!-- AI IDS Status -->
+            <div class="status-card">
+                <div class="status-card-header">
+                    <span class="status-card-icon">🤖</span>
+                    <h3>AI Intrusion Detection</h3>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Threat Level</span>
+                    <span class="threat-badge threat-{{ status.ids_status.threat_level }}">
+                        {{ status.ids_status.threat_level }}
+                    </span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Active Sessions</span>
+                    <span class="status-value">{{ status.ids_status.active_sessions }}</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Blocked IPs</span>
+                    <span class="status-value status-warning">{{ status.ids_status.blocked_ips }}</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Recent Events</span>
+                    <span class="status-value">{{ status.ids_status.recent_events }}</span>
+                </div>
+            </div>
+            
+            <!-- Memory Status -->
+            <div class="status-card">
+                <div class="status-card-header">
+                    <span class="status-card-icon">💾</span>
+                    <h3>Secure Memory</h3>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Active Messages</span>
+                    <span class="status-value status-active">
+                        <span class="status-dot"></span>
+                        <span>{{ status.memory_usage }}</span>
+                    </span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Memory Protection</span>
+                    <span class="status-value status-active">
+                        <span class="status-dot"></span>
+                        <span>Enabled</span>
+                    </span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Auto-Wipe</span>
+                    <span class="status-value status-active">
+                        <span class="status-dot"></span>
+                        <span>Active</span>
+                    </span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Forensics Resistance</span>
+                    <span class="status-value status-active">Maximum</span>
+                </div>
+            </div>
+            
+            <!-- Quantum Crypto -->
+            <div class="status-card">
+                <div class="status-card-header">
+                    <span class="status-card-icon">🔐</span>
+                    <h3>Quantum-Resistant Crypto</h3>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Status</span>
+                    <span class="status-value status-active">
+                        <span class="status-dot"></span>
+                        <span>Active</span>
+                    </span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Algorithm</span>
+                    <span class="status-value">{{ status.quantum_status.algorithm }}</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Security Level</span>
+                    <span class="status-value status-active">{{ status.quantum_status.security_level }}</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Active Sessions</span>
+                    <span class="status-value">{{ status.quantum_status.active_sessions }}</span>
+                </div>
+            </div>
+            
+            <!-- ML-Powered Threat Assessment -->
+            <div class="status-card" style="border: 2px solid var(--accent-color);">
+                <div class="status-card-header">
+                    <span class="status-card-icon">🤖</span>
+                    <h3>ML Threat Assessment</h3>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">ML Models</span>
+                    <span class="status-value status-active">
+                        <span class="status-dot"></span>
+                        <span>{{ status.threat_assessment.ml_model_accuracy }}</span>
+                    </span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Total Assessments</span>
+                    <span class="status-value">{{ status.threat_assessment.total_assessments or 0 }}</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Avg Risk Score</span>
+                    <span class="status-value">{{ "%.1f"|format(status.threat_assessment.average_risk_score or 0) }}/100</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Training Samples</span>
+                    <span class="status-value">{{ status.threat_assessment.ml_training_samples or 0 }}</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Critical Threats</span>
+                    <span class="status-value status-danger">{{ status.threat_assessment.recent_critical_count or 0 }}</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">High Threats</span>
+                    <span class="status-value status-warning">{{ status.threat_assessment.recent_high_count or 0 }}</span>
+                </div>
+                {% if status.threat_assessment.threat_distribution %}
+                <div class="status-item" style="grid-column: 1 / -1; margin-top: 0.5rem;">
+                    <span class="status-label">Threat Distribution</span>
+                    <div style="margin-top: 0.5rem;">
+                        {% for level, count in status.threat_assessment.threat_distribution.items() %}
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+                            <span style="text-transform: uppercase; font-size: 0.75rem; font-weight: 600;">{{ level }}</span>
+                            <span class="threat-badge threat-{{ level }}">{{ count }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            
+            <!-- Encryption Anomaly Detection -->
+            <div class="status-card" style="border: 2px solid var(--warning-color);">
+                <div class="status-card-header">
+                    <span class="status-card-icon">🔍</span>
+                    <h3>Encryption Anomaly Detection</h3>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">ML Model Status</span>
+                    <span class="status-value status-active">
+                        <span class="status-dot"></span>
+                        <span>{{ status.encryption_validation.ml_model_status or 'training' }}</span>
+                    </span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Monitoring</span>
+                    <span class="status-value {% if status.encryption_validation.monitoring_active %}status-active{% else %}status-inactive{% endif %}">
+                        <span class="status-dot"></span>
+                        <span>{{ 'Active' if status.encryption_validation.monitoring_active else 'Inactive' }}</span>
+                    </span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Total Events Logged</span>
+                    <span class="status-value">{{ status.encryption_validation.total_events_logged or 0 }}</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Anomalies (24h)</span>
+                    <span class="status-value status-warning">{{ status.encryption_validation.total_anomalies_24h or 0 }}</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Recent Anomalies (1h)</span>
+                    <span class="status-value {% if (status.encryption_validation.recent_anomalies_1h or 0) > 0 %}status-danger{% endif %}">
+                        {{ status.encryption_validation.recent_anomalies_1h or 0 }}
+                    </span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Users Monitored</span>
+                    <span class="status-value">{{ status.encryption_validation.users_monitored or 0 }}</span>
+                </div>
+                {% if status.encryption_validation.severity_breakdown %}
+                <div class="status-item" style="grid-column: 1 / -1; margin-top: 0.5rem;">
+                    <span class="status-label">Anomaly Severity (1h)</span>
+                    <div style="margin-top: 0.5rem;">
+                        {% for severity, count in status.encryption_validation.severity_breakdown.items() %}
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+                            <span style="text-transform: uppercase; font-size: 0.75rem; font-weight: 600;">{{ severity }}</span>
+                            <span class="threat-badge threat-{{ severity }}">{{ count }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+                {% if status.encryption_validation.anomaly_summary %}
+                <div class="status-item" style="grid-column: 1 / -1; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border-color);">
+                    <span class="status-label" style="color: var(--danger-color); font-weight: 700;">⚠️ Detected Threats Summary</span>
+                    <div style="margin-top: 0.5rem; font-size: 0.75rem;">
+                        {% for anomaly in status.encryption_validation.anomaly_summary %}
+                        <div style="background: rgba(255, 71, 87, 0.1); padding: 0.75rem; margin-bottom: 0.5rem; border-left: 4px solid {% if anomaly.severity == 'critical' %}var(--danger-color){% else %}var(--warning-color){% endif %}; border-radius: 4px;">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+                                <div style="flex: 1;">
+                                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.3rem;">
+                                        <div style="font-weight: 700; font-size: 0.85rem; text-transform: uppercase; color: {% if anomaly.severity == 'critical' %}var(--danger-color){% else %}var(--warning-color){% endif %};">
+                                            {{ anomaly.type.replace('_', ' ') }}
+                                        </div>
+                                        <div style="background: {% if anomaly.severity == 'critical' %}var(--danger-color){% else %}var(--warning-color){% endif %}; color: white; padding: 0.15rem 0.5rem; border-radius: 12px; font-size: 0.7rem; font-weight: 700;">
+                                            {{ anomaly.count }}x
+                                        </div>
+                                    </div>
+                                    <!-- Attack Type Badge -->
+                                    {% if 'sender' in anomaly.type.lower() %}
+                                    <div style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.65rem; font-weight: 700; margin-right: 0.3rem;">
+                                        📤 SENDER ATTACK
+                                    </div>
+                                    {% elif 'receiver' in anomaly.type.lower() %}
+                                    <div style="display: inline-block; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.65rem; font-weight: 700; margin-right: 0.3rem;">
+                                        📥 RECEIVER ATTACK
+                                    </div>
+                                    {% elif 'mixed' in anomaly.type.lower() %}
+                                    <div style="display: inline-block; background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: #000; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.65rem; font-weight: 700; margin-right: 0.3rem;">
+                                        🔄 MIXED ATTACK (SEND+RECEIVE)
+                                    </div>
+                                    {% endif %}
+                                    <!-- ML Detection Badge -->
+                                    {% if 'ml_' in anomaly.type.lower() %}
+                                    <div style="display: inline-block; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: #000; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.65rem; font-weight: 700;">
+                                        🤖 ML-DETECTED
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div style="background: {% if anomaly.severity == 'critical' %}var(--danger-color){% else %}var(--warning-color){% endif %}; color: white; padding: 0.2rem 0.5rem; border-radius: 3px; font-size: 0.7rem; font-weight: 600; white-space: nowrap;">
+                                    {{ "%.0f"|format(anomaly.confidence * 100) }}% CONFIDENCE
+                                </div>
+                            </div>
+                            <div style="color: var(--text-primary); margin-bottom: 0.5rem; line-height: 1.4; font-size: 0.8rem;">
+                                {{ anomaly.description }}
+                            </div>
+                            {% if anomaly.indicators %}
+                            <div style="background: rgba(0, 0, 0, 0.2); padding: 0.4rem; margin-top: 0.5rem; border-radius: 3px; font-size: 0.7rem;">
+                                <div style="font-weight: 600; margin-bottom: 0.25rem; color: var(--warning-color);">🔍 Attack Details:</div>
+                                {% for indicator in anomaly.indicators[:5] %}
+                                <div style="color: var(--text-light); margin-left: 0.5rem; margin-bottom: 0.1rem; line-height: 1.3;">• {{ indicator }}</div>
+                                {% endfor %}
+                                {% if anomaly.indicators|length > 5 %}
+                                <div style="color: var(--text-secondary); margin-left: 0.5rem; margin-top: 0.2rem; font-style: italic; font-size: 0.65rem;">
+                                    ... and {{ anomaly.indicators|length - 5 }} more indicators
+                                </div>
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                            {% if anomaly.recommended_action %}
+                            <div style="background: rgba(76, 175, 80, 0.15); padding: 0.4rem; margin-top: 0.5rem; border-radius: 3px; border-left: 3px solid var(--success-color); font-size: 0.7rem;">
+                                <div style="font-weight: 600; color: var(--success-color);">🛡️ Defense Actions:</div>
+                                <div style="color: var(--text-light); margin-top: 0.25rem; margin-left: 0.5rem; line-height: 1.4;">{{ anomaly.recommended_action }}</div>
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            
+            <!-- Security Monitoring -->
+            <div class="status-card">
+                <div class="status-card-header">
+                    <span class="status-card-icon">📡</span>
+                    <h3>Security Monitoring</h3>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Total Events</span>
+                    <span class="status-value">{{ status.security_signals.event_statistics.total_events or 0 }}</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Recent Activity</span>
+                    <span class="status-value">{{ status.security_signals.recent_actions or 0 }}</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Active Threats</span>
+                    <span class="status-value status-warning">{{ status.security_signals.active_threats or 0 }}</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Monitoring</span>
+                    <span class="status-value status-active">
+                        <span class="status-dot"></span>
+                        <span>Continuous</span>
+                    </span>
+                </div>
+            </div>
+            
+            <!-- System Metrics -->
+            <div class="status-card">
+                <div class="status-card-header">
+                    <span class="status-card-icon">⚡</span>
+                    <h3>System Metrics</h3>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">CPU Usage</span>
+                    <span class="status-value">{{ status.ids_status.system_metrics.metrics.cpu_usage or 0 }}%</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Memory Usage</span>
+                    <span class="status-value">{{ status.ids_status.system_metrics.metrics.memory_usage or 0 }}%</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Network Connections</span>
+                    <span class="status-value">{{ status.ids_status.system_metrics.metrics.network_connections or 0 }}</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Uptime</span>
+                    <span class="status-value status-active">Online</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Emergency Section -->
+        <div class="emergency-section">
+            <h3>🚨 Emergency Controls</h3>
+            <p>Use these controls only in case of security breach or emergency</p>
+            
+            <div class="emergency-buttons">
+                <form method="POST" action="/emergency_wipe" style="display: inline-block;">
+                    <button type="submit" class="btn btn-danger" 
+                            onclick="return confirm('This will permanently destroy all messages and session data. Continue?')">
+                        <span>🗑️</span>
+                        <span>Emergency Wipe</span>
+                    </button>
+                </form>
+                
+                <button class="btn btn-danger" onclick="rotateCircuit()">
+                    <span>🔄</span>
+                    <span>Rotate Tor Circuit</span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <a href="/" class="btn btn-secondary">
+                <span>🏠</span>
+                <span>Home</span>
+            </a>
+            <a href="/send_message" class="btn btn-secondary">
+                <span>📝</span>
+                <span>Send Message</span>
+            </a>
+            <a href="/inbox" class="btn btn-secondary">
+                <span>📬</span>
+                <span>Inbox</span>
+            </a>
+        </div>
+    </div>
+    
+    <script>
+        // Auto-refresh status every 30 seconds
+        let autoRefreshInterval = setInterval(() => {
+            location.reload();
+        }, 30000);
+        
+        // Rotate Tor circuit
+        function rotateCircuit() {
+            if (confirm('Rotate Tor circuit for enhanced anonymity?')) {
+                fetch('/api/rotate_circuit', {method: 'POST'})
+                    .then(() => {
+                        alert('Tor circuit rotated successfully');
+                        location.reload();
+                    })
+                    .catch(() => {
+                        alert('Failed to rotate circuit');
+                    });
+            }
+        }
+        
+        // Status indicator animations
+        function animateStatusDots() {
+            const dots = document.querySelectorAll('.status-dot');
+            dots.forEach((dot, index) => {
+                setTimeout(() => {
+                    dot.style.transform = 'scale(1.2)';
+                    setTimeout(() => {
+                        dot.style.transform = 'scale(1)';
+                    }, 200);
+                }, index * 100);
+            });
+        }
+        
+        setInterval(animateStatusDots, 3000);
+    </script>
+</body>
+</html>

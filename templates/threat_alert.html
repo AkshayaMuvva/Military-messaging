@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Threat Alert – Secure Messenger</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --background-color: #0f172a;
+            --card-bg: #131c31;
+            --border-color: rgba(148, 163, 184, 0.35);
+            --text-color: #e2e8f0;
+            --text-light: #94a3b8;
+            --danger-color: #f87171;
+            --warning-color: #fbbf24;
+            --primary-color: #6366f1;
+        }
+
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: radial-gradient(circle at top, rgba(99, 102, 241, 0.18), transparent 55%),
+                        radial-gradient(circle at bottom, rgba(248, 113, 113, 0.15), transparent 60%),
+                        var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2.5rem 1.5rem;
+        }
+
+        .alert-container {
+            max-width: 900px;
+            width: 100%;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0;
+            clip-path: polygon(18px 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%, 0 18px);
+            padding: 2.5rem;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+        }
+
+        .alert-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 2rem;
+            margin-bottom: 1.75rem;
+        }
+
+        .alert-header h1 {
+            margin: 0;
+            font-size: 2rem;
+            color: var(--danger-color);
+        }
+
+        .alert-header p {
+            margin: 0.35rem 0 0;
+            color: var(--text-light);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .message-reference {
+            background: rgba(148, 163, 184, 0.08);
+            border-left: 4px solid var(--warning-color);
+            padding: 0.75rem 1.25rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .threat-card {
+            background: rgba(239, 68, 68, 0.12);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            border-left: 5px solid rgba(239, 68, 68, 0.9);
+            border-radius: 6px;
+            padding: 1.5rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .threat-card.critical {
+            border-left-color: #ef4444;
+            background: rgba(239, 68, 68, 0.18);
+        }
+
+        .threat-card.high {
+            border-left-color: #fb7185;
+            background: rgba(251, 113, 133, 0.16);
+        }
+
+        .threat-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 0.9rem;
+        }
+
+        .badge-row {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.2rem 0.65rem;
+            border-radius: 999px;
+            text-transform: uppercase;
+        }
+
+        .badge.role-receiver {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: #1f1130;
+        }
+
+        .badge.severity-critical {
+            background: linear-gradient(135deg, #ff1744 0%, #ff6b6b 100%);
+            color: white;
+        }
+
+        .badge.severity-high {
+            background: linear-gradient(135deg, #ff6b81 0%, #ff4757 100%);
+            color: white;
+        }
+
+        .threat-description {
+            color: var(--text-color);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .indicator-list {
+            background: rgba(15, 23, 42, 0.55);
+            border-radius: 6px;
+            padding: 0.9rem 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .indicator-list h3 {
+            margin: 0 0 0.5rem;
+            font-size: 0.85rem;
+            color: var(--warning-color);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .indicator-list ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .indicator-list li {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 0.4rem;
+        }
+
+        .recommended-action {
+            border-left: 3px solid #34d399;
+            background: rgba(16, 185, 129, 0.1);
+            padding: 0.9rem 1.15rem;
+            border-radius: 6px;
+            margin-top: 0.75rem;
+        }
+
+        .recommended-action h3 {
+            margin: 0 0 0.45rem;
+            font-size: 0.85rem;
+            color: #34d399;
+        }
+
+        .recommended-action p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: var(--text-color);
+            line-height: 1.5;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 2.25rem;
+        }
+
+        .btn {
+            padding: 0.85rem 1.6rem;
+            border-radius: 0;
+            clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+            border: 2px solid transparent;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.65rem;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: #f8fafc;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(99, 102, 241, 0.35);
+        }
+
+        .btn-secondary {
+            border-color: rgba(148, 163, 184, 0.4);
+            color: var(--text-color);
+            background: transparent;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(15, 23, 42, 0.35);
+        }
+
+        .confidence-tag {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        @media (max-width: 720px) {
+            body {
+                padding: 1.5rem 1rem;
+            }
+
+            .alert-container {
+                padding: 1.75rem;
+            }
+
+            .alert-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="alert-container">
+        <div class="alert-header">
+            <div>
+                <h1>🚨 Receiver Threat Detected</h1>
+                <p>Our anomaly detector flagged suspicious activity against your inbox. The message below may be part of an active attack. Review the details carefully before choosing how to proceed.</p>
+            </div>
+            <div class="confidence-tag">
+                Latest check: {{ threat_alerts|length }} high-risk signal{{ 's' if threat_alerts|length != 1 else '' }}
+            </div>
+        </div>
+
+        <div class="message-reference">
+            <strong>Message ID:</strong> {{ message_id }}<br>
+            Access temporarily paused until you acknowledge the threat.
+        </div>
+
+        {% for threat in threat_alerts %}
+        <div class="threat-card {{ threat.severity|lower }}">
+            <div class="threat-title">
+                <div class="badge-row">
+                    <span class="badge role-{{ threat.role|lower }}">{{ threat.role_label }}</span>
+                    <span class="badge severity-{{ threat.severity|lower }}">{{ threat.severity_label }}</span>
+                </div>
+                <span class="confidence-tag">Confidence: {{ (threat.confidence|default(0, true) * 100)|round(0, 'floor') }}%</span>
+            </div>
+            <h3 style="margin: 0 0 .35rem; color: var(--text-color);">{{ threat.title }}</h3>
+            <p class="threat-description">{{ threat.description }}</p>
+
+            {% if threat.indicators %}
+            <div class="indicator-list">
+                <h3>Indicators Observed</h3>
+                <ul>
+                    {% for indicator in threat.indicators %}
+                    <li>• {{ indicator }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            <div class="recommended-action">
+                <h3>Recommended Response</h3>
+                <p>{{ threat.recommended_action }}</p>
+                {% if threat.playbook %}
+                <ol style="margin: .5rem 0 0 1.2rem; color: var(--text-color);">
+                    {% for step in threat.playbook %}
+                    <li style="margin-bottom:.25rem;">{{ step }}</li>
+                    {% endfor %}
+                </ol>
+                {% endif %}
+            </div>
+
+            <p class="confidence-tag">Detected {{ threat.detected_ago }}</p>
+        </div>
+        {% endfor %}
+
+        <div class="actions">
+            <a href="{{ continue_url }}" class="btn btn-primary">Proceed With Caution →</a>
+            <a href="{{ url_for('inbox') }}" class="btn btn-secondary">Return to Inbox</a>
+        </div>
+    </div>
+</body>
+</html>

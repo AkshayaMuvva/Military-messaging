@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔒 Secure Inbox - Military Grade</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4a5fff;
+            --primary-dark: #3449db;
+            --secondary-color: #6b4fff;
+            --accent-color: #00d4ff;
+            --accent-light: #4dffff;
+            --danger-color: #ff4757;
+            --warning-color: #ffa502;
+            --success-color: #00e676;
+            --text-color: #f0f4ff;
+            --text-light: #a8b2d1;
+            --background-color: #0f1114;
+            --card-bg: #1c1f2e;
+            --border-color: #2e3548;
+            --gradient-1: linear-gradient(135deg, #4a5fff 0%, #6b4fff 100%);
+            --gradient-2: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #f0f4ff;
+                --text-light: #a8b2d1;
+                --background-color: #0f1114;
+                --card-bg: #1c1f2e;
+                --border-color: #2e3548;
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: hsla(216, 14%, 7%, 1);
+            background: linear-gradient(0deg, hsla(216, 14%, 7%, 1) 29%, hsla(234, 70%, 24%, 1) 100%);
+            background: -moz-linear-gradient(0deg, hsla(216, 14%, 7%, 1) 29%, hsla(234, 70%, 24%, 1) 100%);
+            background: -webkit-linear-gradient(0deg, hsla(216, 14%, 7%, 1) 29%, hsla(234, 70%, 24%, 1) 100%);
+            background-attachment: fixed;
+            color: var(--text-color);
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.8);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(20px) saturate(180%);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            .navbar {
+                background: rgba(30, 41, 59, 0.8);
+            }
+        }
+        
+        .navbar-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 700;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .nav-link {
+            padding: 0.5rem 1rem;
+            background: var(--background-color);
+            color: var(--text-color);
+            text-decoration: none;
+            border-radius: 0;
+            clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+        
+        .nav-link:hover {
+            background: var(--gradient-2);
+            color: white;
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: clamp(1.75rem, 4vw, 2.5rem);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-subtitle {
+            color: var(--text-light);
+            font-size: 0.9375rem;
+        }
+
+        .flash-messages {
+            margin-bottom: 1.5rem;
+        }
+
+        .flash-message {
+            padding: 1rem 1.25rem;
+            margin-bottom: 1rem;
+            border-radius: 0;
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 500;
+        }
+
+        .flash-success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+
+        .flash-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        .inbox-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0;
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(99, 102, 241, 0.1);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-light);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .messages-container {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0;
+            clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .messages-container h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+        }
+
+        .message-item {
+            background: var(--background-color);
+            border: 1px solid var(--border-color);
+            border-radius: 0;
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .message-item:hover {
+            border-color: var(--accent-color);
+            box-shadow: 0 4px 12px rgba(6, 182, 212, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .sender-info {
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--text-color);
+        }
+
+        .timestamp {
+            color: var(--text-light);
+            font-size: 0.875rem;
+        }
+
+        .ttl-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            background: linear-gradient(135deg, var(--warning-color), #f97316);
+            color: white;
+            padding: 0.375rem 0.75rem;
+            border-radius: 0;
+            clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+            font-size: 0.8125rem;
+            font-weight: 600;
+        }
+
+        .message-actions {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.625rem 1.25rem;
+            border: none;
+            border-radius: 0;
+            clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--gradient-1);
+            color: white;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+        }
+
+        .warning-text {
+            color: var(--text-light);
+            font-size: 0.8125rem;
+        }
+
+        .empty-inbox {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-inbox h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+
+        .empty-inbox p {
+            color: var(--text-light);
+            font-size: 0.9375rem;
+        }
+
+        .security-notice {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.1));
+            border: 1px solid var(--danger-color);
+            border-radius: 0;
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+            padding: 1.5rem;
+        }
+
+        .security-notice h4 {
+            font-size: 1.125rem;
+            margin-bottom: 1rem;
+            color: var(--danger-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .security-notice ul {
+            margin-left: 1.5rem;
+            color: var(--text-color);
+        }
+
+        .security-notice li {
+            margin-bottom: 0.5rem;
+            font-size: 0.9375rem;
+        }
+
+        @media (max-width: 768px) {
+            .navbar-content {
+                padding: 0 1rem;
+            }
+            
+            .container {
+                padding: 1.5rem 1rem;
+            }
+
+            .inbox-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .message-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .nav-links {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .nav-link {
+                flex: 1;
+                text-align: center;
+                padding: 0.5rem 0.5rem;
+                font-size: 0.8125rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="logo">🛡️ SecureMsg</div>
+            <div class="nav-links">
+                <a href="/" class="nav-link">🏠 Home</a>
+                <a href="/send_message" class="nav-link">📝 Send</a>
+                <a href="/inbox" class="nav-link" style="background: var(--primary-color); color: white;">📬 Inbox</a>
+                <a href="/status" class="nav-link">📊 Status</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="header">
+            <h1>Secure Inbox</h1>
+            <p class="header-subtitle">Memory-only • Auto-destruct • End-to-end encrypted</p>
+        </div>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash-message flash-{{ category }}">
+                            <span>{% if category == 'success' %}✓{% else %}⚠{% endif %}</span>
+                            <span>{{ message }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Inbox Statistics -->
+        <div class="inbox-stats">
+            <div class="stat-card">
+                <div class="stat-number">{{ messages|length }}</div>
+                <div class="stat-label">Total Messages</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ messages|selectattr('ttl_remaining', '>', 300)|list|length }}</div>
+                <div class="stat-label">Fresh Messages</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ messages|selectattr('ttl_remaining', '<', 60)|list|length }}</div>
+                <div class="stat-label">Expiring Soon</div>
+            </div>
+        </div>
+
+        <!-- Messages Container -->
+        <div class="messages-container">
+            <h2>🔒 Encrypted Messages</h2>
+            
+            {% if messages %}
+                {% for message in messages %}
+                <div class="message-item">
+                    <div class="message-header">
+                        <div class="sender-info">
+                            🔐 From: <strong>{{ message.sender_id }}</strong>
+                        </div>
+                        <div class="timestamp">
+                            📅 {{ moment(message.timestamp).format('MMM DD, YYYY HH:mm') if moment else 'Recent' }}
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 1rem;">
+                        <span class="ttl-badge">
+                            ⏰ Expires in: {{ '%d'|format(message.ttl_remaining // 60) }}m {{ '%d'|format(message.ttl_remaining % 60) }}s
+                        </span>
+                    </div>
+                    
+                    <div class="message-actions">
+                        <a href="/read/{{ message.message_id }}" class="btn btn-primary">
+                            <span>🔓</span>
+                            <span>Read & Decrypt</span>
+                        </a>
+                        <span class="warning-text">
+                            ⚠️ Message will self-destruct after reading
+                        </span>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-inbox">
+                    <div class="empty-icon">📭</div>
+                    <h3>No Messages</h3>
+                    <p>Your secure inbox is empty.</p>
+                    <p><small>Messages appear here when someone sends them to your User ID.</small></p>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Security Notice -->
+        <div class="security-notice">
+            <h4><span>⚠️</span><span>Security Notice</span></h4>
+            <ul>
+                <li>Messages are stored only in memory - no disk persistence</li>
+                <li>Each message can only be read once before destruction</li>
+                <li>Messages auto-destruct based on TTL timer</li>
+                <li>No message recovery is possible once destroyed</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Auto-refresh inbox every 30 seconds
+        setInterval(() => {
+            window.location.reload();
+        }, 30000);
+    </script>
+</body>
+</html>
