@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Anomaly Detection Example - What Users See</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 2rem;
+            margin: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #1a1a2e;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #fff;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .info-box {
+            background: rgba(255, 255, 255, 0.1);
+            border-left: 4px solid #4CAF50;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            border-radius: 4px;
+            color: #fff;
+        }
+        .status-card {
+            background: #16213e;
+            border: 2px solid #ff8c42;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+        .card-icon {
+            font-size: 2rem;
+        }
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+            margin: 0;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .stat-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: 8px;
+        }
+        .stat-label {
+            font-size: 0.85rem;
+            color: #aaa;
+            margin-bottom: 0.5rem;
+        }
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+        }
+        .anomaly-card {
+            background: rgba(255, 71, 87, 0.1);
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #ff4757;
+            border-radius: 8px;
+        }
+        .anomaly-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .anomaly-type {
+            font-weight: 700;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            color: #ff4757;
+            letter-spacing: 0.5px;
+        }
+        .confidence-badge {
+            background: #ff4757;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .anomaly-description {
+            color: #fff;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+        .indicators-section {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 6px;
+        }
+        .section-title {
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: #ffa502;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .indicator-item {
+            color: #ddd;
+            margin-left: 1rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+        .action-section {
+            background: rgba(255, 165, 0, 0.15);
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 6px;
+            border-left: 3px solid #ffa502;
+        }
+        .action-text {
+            color: #fff;
+            margin-top: 0.5rem;
+            margin-left: 1rem;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        .severity-breakdown {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+        .severity-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        .severity-label {
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #fff;
+        }
+        .severity-count {
+            background: #ff4757;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+        .arrow {
+            color: #4CAF50;
+            font-size: 2rem;
+            text-align: center;
+            margin: 1rem 0;
+        }
+        .highlight-box {
+            background: rgba(76, 175, 80, 0.2);
+            border: 2px solid #4CAF50;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+        .highlight-title {
+            color: #4CAF50;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .highlight-text {
+            color: #fff;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Encryption Anomaly Detection - Live Example</h1>
+        
+        <div class="info-box">
+            <strong>📍 Location:</strong> http://127.0.0.1:5001/status → Scroll to "Encryption Anomaly Detection" card
+            <br><br>
+            <strong>✨ This is what users see when anomalies are detected</strong>
+        </div>
+
+        <div class="status-card">
+            <div class="card-header">
+                <span class="card-icon">🔍</span>
+                <h3 class="card-title">Encryption Anomaly Detection</h3>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-label">ML Model Status</div>
+                    <div class="stat-value">✅ Trained</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Monitoring</div>
+                    <div class="stat-value">🟢 Active</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Total Events Logged</div>
+                    <div class="stat-value">1,234</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Anomalies (24h)</div>
+                    <div class="stat-value" style="color: #ff4757;">23</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Recent Anomalies (1h)</div>
+                    <div class="stat-value" style="color: #ff4757;">5</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Users Monitored</div>
+                    <div class="stat-value">4</div>
+                </div>
+            </div>
+
+            <div class="severity-breakdown">
+                <div class="section-title">🚨 Anomaly Severity (1h)</div>
+                <div class="severity-item">
+                    <span class="severity-label">Critical</span>
+                    <span class="severity-count">17</span>
+                </div>
+                <div class="severity-item">
+                    <span class="severity-label">High</span>
+                    <span class="severity-count" style="background: #ff8c42;">6</span>
+                </div>
+            </div>
+
+            <h4 style="color: #ff4757; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem;">⚠️ Recent Critical Anomalies</h4>
+
+            <!-- Example 1: Credential Stuffing -->
+            <div class="anomaly-card">
+                <div class="anomaly-header">
+                    <div class="anomaly-type">Credential Stuffing</div>
+                    <div class="confidence-badge">95% CONFIDENCE</div>
+                </div>
+                
+                <div class="anomaly-description">
+                    🔴 CREDENTIAL ATTACK: 8 failed decryption attempts in 1 hour (normal: &lt;5)
+                </div>
+
+                <div class="highlight-box">
+                    <div class="highlight-title">👆 WHAT - Attack Type Clearly Identified</div>
+                    <div class="highlight-text">User immediately knows this is a "Credential Stuffing" attack</div>
+                </div>
+
+                <div class="indicators-section">
+                    <div class="section-title">🔍 Threat Indicators:</div>
+                    <div class="indicator-item">• ❌ 8 failed decrypt attempts in past hour</div>
+                    <div class="indicator-item">• 🔑 Pattern: Multiple wrong passwords/keys</div>
+                    <div class="indicator-item">• 🌐 Source IP: 203.0.113.45</div>
+                    <div class="indicator-item">• 💥 Risk: Account compromise in progress</div>
+                </div>
+
+                <div class="highlight-box">
+                    <div class="highlight-title">👆 HOW & WHY - Attack Method Explained</div>
+                    <div class="highlight-text">Shows exactly HOW the attack works (multiple wrong passwords) and WHY it's dangerous (account compromise)</div>
+                </div>
+
+                <div class="action-section">
+                    <div class="section-title">💡 Recommended Action:</div>
+                    <div class="action-text">
+                        🚨 CRITICAL: Lock account immediately, force password reset, notify user, alert security team
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <div class="highlight-title">👆 WHAT TO DO - Clear Actionable Steps</div>
+                    <div class="highlight-text">Specific instructions on exactly what actions to take right now</div>
+                </div>
+            </div>
+
+            <!-- Example 2: Session Hijacking -->
+            <div class="anomaly-card">
+                <div class="anomaly-header">
+                    <div class="anomaly-type">Session Hijacking Attempt</div>
+                    <div class="confidence-badge">90% CONFIDENCE</div>
+                </div>
+                
+                <div class="anomaly-description">
+                    🚨 SESSION HIJACKING: 6 different sessions detected in 1 hour (attack type: Session theft)
+                </div>
+
+                <div class="indicators-section">
+                    <div class="section-title">🔍 Threat Indicators:</div>
+                    <div class="indicator-item">• 🔀 Multiple sessions: 6 unique session IDs</div>
+                    <div class="indicator-item">• ⏰ Time window: Past hour</div>
+                    <div class="indicator-item">• 🎯 Attack type: Session hijacking/fixation</div>
+                    <div class="indicator-item">• 🔍 Method: Stealing or predicting session tokens</div>
+                    <div class="indicator-item">• 🌐 Current IP: 10.0.5.100</div>
+                    <div class="indicator-item">• 💥 Risk: Unauthorized account access</div>
+                </div>
+
+                <div class="action-section">
+                    <div class="section-title">💡 Recommended Action:</div>
+                    <div class="action-text">
+                        🚨 IMMEDIATE: Invalidate all sessions, force re-login, enable 2FA, log all IP addresses
+                    </div>
+                </div>
+            </div>
+
+            <!-- Example 3: Brute Force -->
+            <div class="anomaly-card">
+                <div class="anomaly-header">
+                    <div class="anomaly-type">Brute Force Attack</div>
+                    <div class="confidence-badge">90% CONFIDENCE</div>
+                </div>
+                
+                <div class="anomaly-description">
+                    🚨 BRUTE FORCE ATTEMPT: 15 rapid decryption attempts detected in 60 seconds (normal: &lt;10)
+                </div>
+
+                <div class="indicators-section">
+                    <div class="section-title">🔍 Threat Indicators:</div>
+                    <div class="indicator-item">• ⚡ 15 decrypt attempts in 1 minute</div>
+                    <div class="indicator-item">• 📊 Normal threshold: 10 per minute</div>
+                    <div class="indicator-item">• 🎯 Attack pattern: Automated password/key guessing</div>
+                    <div class="indicator-item">• 📍 Risk: Unauthorized access attempt</div>
+                </div>
+
+                <div class="action-section">
+                    <div class="section-title">💡 Recommended Action:</div>
+                    <div class="action-text">
+                        🛡️ IMMEDIATE: Rate limit user, require multi-factor authentication, log IP address
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="arrow">⬇️</div>
+
+        <div class="info-box" style="border-left-color: #4CAF50;">
+            <h3 style="color: #4CAF50; margin-top: 0;">✅ All 4 Questions Answered for Users:</h3>
+            <ol style="line-height: 2;">
+                <li><strong>WHAT</strong> - Attack type name clearly labeled at top (e.g., "CREDENTIAL STUFFING")</li>
+                <li><strong>HOW</strong> - Attack method explained in threat indicators section</li>
+                <li><strong>WHY</strong> - Risk level and danger explained in description and indicators</li>
+                <li><strong>WHAT TO DO</strong> - Specific actionable steps in "Recommended Action" section</li>
+            </ol>
+        </div>
+
+        <div class="info-box" style="border-left-color: #ffa502;">
+            <h3 style="color: #ffa502; margin-top: 0;">🚀 How to See This Right Now:</h3>
+            <ol style="line-height: 2;">
+                <li>Server is running at: <strong>http://127.0.0.1:5001</strong></li>
+                <li>Navigate to: <strong>http://127.0.0.1:5001/status</strong></li>
+                <li>Scroll down to the orange-bordered "Encryption Anomaly Detection" card</li>
+                <li>You'll see all detected anomalies with WHAT/HOW/WHY/WHAT TO DO details!</li>
+            </ol>
+            <p style="margin-top: 1rem; padding: 1rem; background: rgba(255, 165, 0, 0.2); border-radius: 4px;">
+                <strong>💡 Tip:</strong> Run <code>python demo_enhanced_anomalies.py</code> to create test anomalies, 
+                then refresh the status page to see them appear!
+            </p>
+        </div>
+    </div>
+</body>
+</html>
