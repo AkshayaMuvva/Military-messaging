@@ -1284,5 +1284,17 @@ class MilitarySecureApp:
 app_instance = MilitarySecureApp()
 app = app_instance.app
 
+# if __name__ == '__main__':
+#     app_instance.run(debug=False)
+
+# app.py (Ensure this structure)
+
+# ... (all application logic, routes, and component initialization) ...
+
 if __name__ == '__main__':
-    app_instance.run(debug=False)
+    # This block is for local development only (Gunicorn ignores it)
+    app.run(host='0.0.0.0', port=5001)
+
+# The 'app' object exposed for Gunicorn
+# This must point to your main Flask application instance
+app = Flask(__name__) # Replace with your actual app instance creation
